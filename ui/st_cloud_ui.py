@@ -78,7 +78,7 @@ if prompt := st.chat_input("Ask about your documentation..."):
                         payload = {"q": prompt, "thread_id": st.session_state.session_id}
                         response = requests.post(url, json=payload, timeout=60)
 
-                       if response.status_code != 200:
+                        if response.status_code != 200:
                             st.error(f"Backend Error: {response.status_code} - {response.text}")
                             st.stop()
 
