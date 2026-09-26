@@ -1,4 +1,5 @@
 import sys
+from app.services.retrival.ranking_service import initialize_ranker
 
 # Ensure UTF-8 output on Windows consoles to prevent UnicodeEncodeError on emojis/symbols
 if sys.platform == "win32":
