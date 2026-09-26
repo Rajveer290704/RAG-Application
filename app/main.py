@@ -10,7 +10,7 @@ if sys.platform == "win32":
             sys.stderr.reconfigure(encoding="utf-8", errors="replace")
     except Exception:
         pass
-
+        
 import logfire
 import os
 from dotenv import load_dotenv
