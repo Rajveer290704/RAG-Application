@@ -40,14 +40,16 @@ def rerank_documents(query: str, documents: list[str], top_n: int = 5) -> list[s
 
     try:
         ranker = _get_ranker()
-        
+        logfire.info("✅ Ranker obtained")
         # FlashRank expects a list of dictionaries with 'id' and 'text'
         passages = [
             {"id": i, "text": doc}
             for i, doc in enumerate(documents)
         ]
-
+        logfire.info(f"✅ Created {len(passages)} passages")
         request = RerankRequest(query=query, passages=passages)
+        logfire.info("✅ RerankRequest created")
+        logfire.info("🚀 Calling ranker.rerank()...")
         results = ranker.rerank(request)
         
         # Results are returned sorted by highest semantic score first
