@@ -39,7 +39,7 @@ def rerank_documents(query: str, documents: list[str], top_n: int = 5) -> list[s
     logfire.info(f"📡 [Reranker] Sending {len(documents)} docs to FlashRank Cross-Encoder...")
 
     try:
-        ranker = _get_ranker()
+        ranker = _ranker()
         
         # FlashRank expects a list of dictionaries with 'id' and 'text'
         passages = [
