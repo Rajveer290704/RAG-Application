@@ -65,5 +65,14 @@ def rerank_documents(query: str, documents: list[str], top_n: int = 5) -> list[s
         logfire.error(f"❌ [Reranker] Semantic Reranking Failed: {e}")
         # Fallback to the original Qdrant order to ensure the user still gets an answer
         return documents[:top_n]
-def initialize_ranker() -> None:
+def initialize_reranker() -> None:
+    """
+    Preloads FlashRank during application startup
+    instead of the first user request.
+    """
+
+    logfire.info("🚀 Preloading FlashRank reranker...")
+
     _get_ranker()
+
+    logfire.info("✅ FlashRank reranker ready.")
