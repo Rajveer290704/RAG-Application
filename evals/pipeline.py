@@ -13,7 +13,7 @@ import os
 import requests
 import logfire
 
-API_URL = "http://localhost:8000/query"
+API_URL = "https://rag-backend-cldc.onrender.com"
 RESPONSE_TRUNCATE = 300
 DELAY_BETWEEN_CALLS = 10   # seconds — stays within Groq RPM on the main key
 REQUEST_TIMEOUT = 120      # seconds — guardrails + LangGraph + Groq can take >60s
