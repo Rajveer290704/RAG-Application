@@ -42,17 +42,17 @@ def rerank_documents(query: str, documents: list[str], top_n: int = 5) -> list[s
         ranker = _get_ranker()
         
         # FlashRank expects a list of dictionaries with 'id' and 'text'
-        # passages = [
-        #     {"id": i, "text": doc}
-        #     for i, doc in enumerate(documents)
-        # ]
+        passages = [
+            {"id": i, "text": doc}
+            for i, doc in enumerate(documents)
+        ]
 
-        # request = RerankRequest(query=query, passages=passages)
-        # results = ranker.rerank(request)
+        request = RerankRequest(query=query, passages=passages)
+        results = ranker.rerank(request)
         
         # Results are returned sorted by highest semantic score first
         reranked_docs = []
-        for res in documents[:top_n]:
+        for res in results[:top_n]:
             reranked_docs.append(res['text'])
 
         duration = time.time() - start_time
