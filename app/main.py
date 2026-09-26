@@ -34,7 +34,6 @@ app = FastAPI(title="Enterprise Agentic RAG API")
 @app.on_event("startup")
 def startup_event():
     initialize_rails()
-    initialize_ranking() 
     
 
 class QueryRequest(BaseModel):
