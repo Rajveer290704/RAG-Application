@@ -51,7 +51,7 @@ def rerank_documents(query: str, documents: list[str], top_n: int = 5) -> list[s
         request = RerankRequest(query=query, passages=passages)
         results = ranker.rerank(request)
         
-        Results are returned sorted by highest semantic score first
+        # Results are returned sorted by highest semantic score first
         reranked_docs = []
         for res in results[:top_n]:
             reranked_docs.append(res['text'])
