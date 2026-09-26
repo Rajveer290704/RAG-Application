@@ -16,10 +16,12 @@ def _get_ranker() -> Ranker:
         logfire.info("🧠 Initializing FlashRank Model (TinyBERT) locally...")
         try:
             # We use a specific cache directory to avoid permission issues in production
+            logfire.error("🧠 Initializing FlashRank Model (TinyBERT) locally...gets error")
             _ranker = Ranker(model_name="ms-marco-TinyBERT-L-2-v2",cache_dir="/tmp/flashrank")
+            logfire.error("🧠 Initializing FlashRank Model (TinyBERT) locally...gets error")
         except Exception:
             # _ranker = Ranker()
-            logfire.error("🧠 Initializing FlashRank Model (TinyBERT) locally...gets error")
+            
     return _ranker
 
 
