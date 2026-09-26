@@ -59,7 +59,7 @@ def rerank_documents(query: str, documents: list[str], top_n: int = 5) -> list[s
         top_score = results[0]['score'] if results else 'N/A'
         logfire.info(f"✅ [Reranker] Done in {duration:.2f}s. Top semantic score: {top_score}")
         
-        return reranked_docs = []
+        return reranked_docs
 
     except Exception as e:
         logfire.error(f"❌ [Reranker] Semantic Reranking Failed: {e}")
