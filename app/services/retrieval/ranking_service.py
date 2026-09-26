@@ -65,12 +65,3 @@ def rerank_documents(query: str, documents: list[str], top_n: int = 5) -> list[s
         logfire.error(f"❌ [Reranker] Semantic Reranking Failed: {e}")
         # Fallback to the original Qdrant order to ensure the user still gets an answer
         return documents[:top_n]
-
-
-def initialize_ranking() -> None:
-    ranker = Ranker(
-        model_name="ms-marco-TinyBERT-L-2-v2"
-    )
-
-    
-
