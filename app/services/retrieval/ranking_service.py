@@ -40,7 +40,7 @@ def rerank_documents(query: str, documents: list[str], top_n: int = 5) -> list[s
     logfire.info(f"📡 [Reranker] Sending {len(documents)} docs to FlashRank Cross-Encoder...")
 
     try:
-        ranker = _get_ranker()
+        # ranker = _get_ranker()
         
         # FlashRank expects a list of dictionaries with 'id' and 'text'
         passages = [
@@ -49,11 +49,11 @@ def rerank_documents(query: str, documents: list[str], top_n: int = 5) -> list[s
         ]
 
         request = RerankRequest(query=query, passages=passages)
-        results = ranker.rerank(request)
+        # results = ranker.rerank(request)
         
         # Results are returned sorted by highest semantic score first
         reranked_docs = []
-        for res in results[:top_n]:
+        for res in documents[:top_n]:
             reranked_docs.append(res['text'])
 
         duration = time.time() - start_time
