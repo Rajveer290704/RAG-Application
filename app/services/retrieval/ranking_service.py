@@ -67,7 +67,10 @@ def rerank_documents(query: str, documents: list[str], top_n: int = 5) -> list[s
         return documents[:top_n]
 
 
+def initialize_ranking() -> None:
+    ranker = Ranker(
+        model_name="ms-marco-TinyBERT-L-2-v2"
+    )
 
-ranker = Ranker(
-    model_name="ms-marco-TinyBERT-L-2-v2"
-)
+    
+
