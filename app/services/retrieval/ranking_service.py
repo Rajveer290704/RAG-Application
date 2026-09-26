@@ -74,5 +74,4 @@ def initialize_reranker() -> None:
     logfire.info("🚀 Preloading FlashRank reranker...")
 
     _get_ranker()
-
     logfire.info("✅ FlashRank reranker ready.")
