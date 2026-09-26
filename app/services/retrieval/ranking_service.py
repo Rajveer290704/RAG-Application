@@ -41,7 +41,7 @@ def rerank_documents(query: str, documents: list[str], top_n: int = 5) -> list[s
         ranker = _get_ranker()
         # FlashRank expects a list of dictionaries with 'id' and 'text'
         passages = [
-            {"id": i,"text": str(doc)}
+            {"id": i,"text": doc[:1000]}
             for i, doc in enumerate(documents)
         ]
         request = RerankRequest(query=query, passages=passages)
