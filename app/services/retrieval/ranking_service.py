@@ -23,7 +23,11 @@ _ranker = None
 # ============================================================
 # FlashRank Initialization
 # ============================================================
-
+def initialize_ranker():
+    """
+    Initialize FlashRank once during application startup.
+    """
+    return _get_ranker()
 def _get_ranker():
     global _ranker
 
