@@ -2,66 +2,106 @@ import time
 import logfire
 from flashrank import Ranker, RerankRequest
 
-# Lazy initialization - Ranker is loaded on first use to ensure logfire.configure() has run
 _ranker = None
 
 
 def _get_ranker() -> Ranker:
-    """
-    Initializes the FlashRank engine lazily. 
-    FlashRank uses a local ONNX model (ms-marco-MiniLM-L-6-v2) for ultra-fast reranking.
-    """
     global _ranker
+
     if _ranker is None:
-        logfire.info("🧠 Initializing FlashRank Model (TinyBERT) locally...")
+        logfire.info("🧠 Loading FlashRank model...")
+
         try:
-            # We use a specific cache directory to avoid permission issues in production
-            _ranker = Ranker(cache_dir="/tmp/flashrank")
-        except Exception:
-            _ranker = Ranker()
+            _ranker = Ranker(
+                model_name="ms-marco-MiniLM-L-12-v2",
+                cache_dir="/tmp/flashrank"
+            )
+
+            logfire.info("✅ FlashRank model loaded successfully")
+
+        except Exception as e:
+            logfire.error(f"❌ FlashRank initialization failed: {repr(e)}")
+            raise
+
     return _ranker
 
 
+def rerank_documents(
+    query: str,
+    documents: list[str],
+    top_n: int = 5
+) -> list[str]:
 
-def rerank_documents(query: str, documents: list[str], top_n: int = 5) -> list[str]:
-    """
-    Refines retrieval results by re-scoring documents against the query semantically.
-    
-    Why FlashRank? 
-    Standard vector search (Cosine Similarity) is fast but mathematically "fuzzy."
-    FlashRank uses a Cross-Encoder approach which is much more precise but usually slow.
-    FlashRank solves this by using highly optimized, quantized ONNX models locally.
-    """
     if not documents:
+        logfire.warning("⚠️ Reranker received 0 documents")
         return []
 
     start_time = time.time()
-    logfire.info(f"📡 [Reranker] Sending {len(documents)} docs to FlashRank Cross-Encoder...")
+
+    logfire.info(
+        f"📡 Reranker received {len(documents)} documents"
+    )
+
+    logfire.info(
+        f"🔎 Query: {query}"
+    )
 
     try:
         ranker = _get_ranker()
-        
-        # FlashRank expects a list of dictionaries with 'id' and 'text'
+
         passages = [
-            {"id": i, "text": doc}
+            {
+                "id": i,
+                "text": str(doc)
+            }
             for i, doc in enumerate(documents)
         ]
 
-        request = RerankRequest(query=query, passages=passages)
+        logfire.info(
+            f"📦 Sending {len(passages)} passages to FlashRank"
+        )
+
+        request = RerankRequest(
+            query=query,
+            passages=passages
+        )
+
         results = ranker.rerank(request)
-        
-        # Results are returned sorted by highest semantic score first
-        reranked_docs = []
-        for res in results[:top_n]:
-            reranked_docs.append(res['text'])
+
+        logfire.info(
+            f"📊 FlashRank returned {len(results)} results"
+        )
+
+        # VERY IMPORTANT: inspect the actual result
+        for i, result in enumerate(results):
+            logfire.info(
+                f"🏆 Rank {i + 1}: "
+                f"id={result.get('id')} "
+                f"score={result.get('score')}"
+            )
+
+        reranked_docs = [
+            result["text"]
+            for result in results[:top_n]
+        ]
 
         duration = time.time() - start_time
-        top_score = results[0]['score'] if results else 'N/A'
-        logfire.info(f"✅ [Reranker] Done in {duration:.2f}s. Top semantic score: {top_score}")
-        
+
+        logfire.info(
+            f"✅ Reranking completed in {duration:.3f}s"
+        )
+
+        logfire.info(
+            f"📤 Returning {len(reranked_docs)} reranked documents"
+        )
+
         return reranked_docs
 
     except Exception as e:
-        logfire.error(f"❌ [Reranker] Semantic Reranking Failed: {e}")
-        # Fallback to the original Qdrant order to ensure the user still gets an answer
-        return documents[:top_n]
+
+        logfire.error(
+            f"❌ RERANKING FAILED: {repr(e)}"
+        )
+
+        # During debugging, DO NOT silently hide the error.
+        raise
