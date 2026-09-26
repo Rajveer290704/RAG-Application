@@ -19,7 +19,6 @@ def _get_ranker() -> Ranker:
             _ranker = Ranker(cache_dir="/tmp/flashrank")
         except Exception:
             _ranker = Ranker()
-            
     return _ranker
 
 
