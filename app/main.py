@@ -1,5 +1,5 @@
 import sys
-from app.services.retrival.ranking_service import initialize_ranker
+from app.services.retrieval.ranking_service import initialize_reranker
 
 # Ensure UTF-8 output on Windows consoles to prevent UnicodeEncodeError on emojis/symbols
 if sys.platform == "win32":
@@ -34,7 +34,7 @@ app = FastAPI(title="Enterprise Agentic RAG API")
 @app.on_event("startup")
 def startup_event():
     initialize_rails()
-    initialize_ranker()
+    initialize_reranker()
 
 class QueryRequest(BaseModel):
     q: str
