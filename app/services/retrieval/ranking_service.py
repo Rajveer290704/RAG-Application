@@ -40,9 +40,13 @@ def rerank_documents(query: str, documents: list[str], top_n: int = 5) -> list[s
     try:
         ranker = _get_ranker()
         # FlashRank expects a list of dictionaries with 'id' and 'text'
+        logfire.info(f"documents type = {type(documents)}")
+        logfire.info(f"documents length = {len(documents)}")
         passages = [
             {"id": i,"text": doc[:1000]}
             for i, doc in enumerate(documents)
+             f"doc[{i}] type={type(doc)}, "
+            f"length={len(doc) if hasattr(doc, '__len__') else 'N/A'}"
         ]
         request = RerankRequest(query=query, passages=passages)
         results = ranker.rerank(request)
