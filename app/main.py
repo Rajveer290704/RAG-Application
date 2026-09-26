@@ -1,5 +1,5 @@
 import sys
-
+from app.reranker import initialize_reranker
 
 # Ensure UTF-8 output on Windows consoles to prevent UnicodeEncodeError on emojis/symbols
 if sys.platform == "win32":
@@ -34,6 +34,7 @@ app = FastAPI(title="Enterprise Agentic RAG API")
 @app.on_event("startup")
 def startup_event():
     initialize_rails()
+    _get_ranker()
     
 
 class QueryRequest(BaseModel):
