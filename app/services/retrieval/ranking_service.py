@@ -53,10 +53,10 @@ def rerank_documents(query: str, documents: list[str], top_n: int = 5) -> list[s
         # Results are returned sorted by highest semantic score first
         reranked_docs = []
         for res in documents[:top_n]:
-            reranked_docs.append(documents['text'])
+            reranked_docs.append(res['text'])
 
-        # duration = time.time() - start_time
-        # top_score = results[0]['score'] if results else 'N/A'
+        duration = time.time() - start_time
+        top_score = results[0]['score'] if results else 'N/A'
         logfire.info(f"✅ [Reranker] Done in {duration:.2f}s. Top semantic score: {top_score}")
         
         return reranked_docs = []
